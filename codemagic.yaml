@@ -5,8 +5,8 @@ workflows:
     max_build_duration: 60
 
     environment:
-      node: 22
-      java: 17
+      node: 22.17.1
+      java: 21
 
     cache:
       cache_paths:
