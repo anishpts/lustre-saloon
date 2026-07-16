@@ -3,11 +3,10 @@ workflows:
     name: Android Release
 
     instance_type: linux_x2
-
     max_build_duration: 60
 
     environment:
-      node: 22.17.1
+      node: 22
       java: 17
 
     cache:
@@ -39,14 +38,12 @@ workflows:
 
       - name: Verify Capacitor
         script: |
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
+          chmod +x ./node_modules/.bin/cap
           ./node_modules/.bin/cap --version
 
       - name: Sync Android
         script: |
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
+          chmod +x ./node_modules/.bin/cap
           ./node_modules/.bin/cap sync android
 
       - name: Build Release APK
