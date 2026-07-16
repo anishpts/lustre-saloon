@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
   webDir: "capacitor-web",
   server: {
     // Point the native WebView at the deployed site.
-    url: "https://lustre-saloon.vercel.app",
+    url: "https://saloon-app-tan.vercel.app",
     androidScheme: "https",
     // Allow http fallback only if your Vercel URL ever needs it (leave false in prod).
     cleartext: false,
