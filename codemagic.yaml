@@ -1,0 +1,66 @@
+workflows:
+  android-release:
+    name: Android Release
+
+    instance_type: linux_x2
+
+    max_build_duration: 60
+
+    environment:
+      node: 22.17.1
+      java: 17
+
+    cache:
+      cache_paths:
+        - ~/.bun
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+
+    triggering:
+      events:
+        - push
+
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    scripts:
+      - name: Install Bun
+        script: |
+          curl -fsSL https://bun.sh/install | bash
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+
+      - name: Install dependencies
+        script: |
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+          bun install --frozen-lockfile
+
+      - name: Verify Capacitor
+        script: |
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+          ./node_modules/.bin/cap --version
+
+      - name: Sync Android
+        script: |
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+          ./node_modules/.bin/cap sync android
+
+      - name: Build Release APK
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease
+
+      - name: Build Release AAB
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+
+    artifacts:
+      - android/app/build/outputs/**/*.apk
+      - android/app/build/outputs/**/*.aab
